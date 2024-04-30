@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservation Form</title>
+
+    <style>
+       
+        .btn{
+            background-color: #ff5520;
+            color: white !important;
+            border:none;
+            border-radius: 2px;  
+              }
+        .btn:hover{
+            background-color: #030a66 ;
+            color: white;
+        }
+        .gaq{
+            background-color: #030a66;
+            color: white !important;
+            border:none;
+            border-radius: 2px;  
+            padding: 8px;
+        }
+        .gaq:hover{
+            background-color: #ff5520 ;
+            color: white;
+        }
+    </style>
+    
+</head>
+
+<body>
+    <div style="width: 25% !important;">
+    
+
+            <h2>Reservation Form</h2>
+            
+            
+            <form id="reservation-form">
+                <!-- Select Package Dropdown -->
+                <label for="package">Select Package:</label><br>
+                <select id="package" name="package">
+                    <option value="Havelock Budget">Havelock Budget</option>
+                    <option value="Havelock Premium">Havelock Premium</option>
+                    <option value="Havelock Standard">Havelock Standard</option>
+                </select><br><br>
+                <div style=" display: flex;">
+                    <div style="margin: auto;"> 
+ <!-- Adult Count -->
+                    <label for="adultCount">Adult</label><br>
+                    <button class="btn" type="button" id="adult-decrement">-</button>
+                    <input style="width: 25%;" type="text" id="adultCount" name="adultCount" value="2" readonly>
+                    <button class="btn" type="button" id="adult-increment">+</button><br><br>
+                    
+                    </div>
+                   
+                    <div style="margin: auto;">
+  <!-- Child Count -->
+                    <label for="childCount">Child </label><br>
+                    <button class="btn" type="button" id="child-decrement">-</button>
+                    <input style="width: 25%;" type="text" id="childCount" name="childCount" value="0" readonly>
+                    <button  class="btn"  type="button" id="child-increment">+</button><br><br>
+                    </div>
+                  
+                </div>
+            <span>
+                Contact Details 
+            </span>
+                <div style="display: flex;margin: auto;">
+                 
+                    <div style="margin: auto;">
+                    <!-- Name -->
+                    <label for="name">Name:</label><br>
+                    <input style="width: 80%;" type="text" id="name" name="name" required placeholder="Name"><br><br>
+
+                </div>
+                    <div style="margin: auto;">
+                    <!-- Email -->
+                    <label for="email">Email:</label><br>
+                    <input style="width: 80%;" placeholder="Email" type="email" id="email" name="email" required><br>
+
+                </div>
+                </div>
+            
+            <!-- Phone Number -->
+            <label for="phone">Phone Number</label><br>
+         
+            <input type="text" id="phone" name="phone"  value="+91 " required placeholder="Phone Number"><br><br>
+            
+            <!-- Hidden input fields for counts -->
+            <input type="hidden" id="hidden-adultCount" name="hidden-adultCount">
+            <input type="hidden" id="hidden-childCount" name="hidden-childCount">
+            
+            <!-- Submit Button -->
+            <input class="gaq" type="submit" value="Get A Quote!">
+        </form>
+ 
+    </div>
+
+    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+    <script>
+        // Initialize EmailJS
+        (function () {
+            emailjs.init("o91TyONmYqnwnWhob");
+        })();
+        
+        // Event listener for form submission
+        document.getElementById('reservation-form').addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent default form submission
+
+            // Get the values of package, adult count, child count, name, email, and phone number
+            var package = document.getElementById('package').value;
+            var adultCount = document.getElementById('adultCount').value;
+            var childCount = document.getElementById('childCount').value;
+            var name = document.getElementById('name').value;
+            var email = document.getElementById('email').value;
+            var phone = document.getElementById('phone').value;
+            
+
+            // Set the values of hidden input fields with the count values
+            document.getElementById('hidden-adultCount').value = adultCount;
+            document.getElementById('hidden-childCount').value = childCount;
+
+            // Send the form using EmailJS
+            emailjs.sendForm("service_41a40ob", "template_7qfpi68", this)
+                .then(function (response) {
+                    console.log('SUCCESS!', response.status, response.text);
+                    // Reset the form after successful submission
+                    document.getElementById('reservation-form').reset();
+                    // Show popup notification
+                    alert('Your reservation has been successfully submitted!');
+                }, function (error) {
+                    console.log('FAILED...', error);
+                });
+        });
+
+        // Increment adult count
+        document.getElementById('adult-increment').addEventListener('click', function () {
+            var adultCountField = document.getElementById('adultCount');
+            var adultCount = parseInt(adultCountField.value);
+            adultCountField.value = adultCount + 1;
+        });
+
+        // Decrement adult count
+        document.getElementById('adult-decrement').addEventListener('click', function () {
+            var adultCountField = document.getElementById('adultCount');
+            var adultCount = parseInt(adultCountField.value);
+            if (adultCount > 2) {
+                adultCountField.value = adultCount - 1;
+            }
+        });
+
+        // Increment child count
+        document.getElementById('child-increment').addEventListener('click', function () {
+            var childCountField = document.getElementById('childCount');
+            var childCount = parseInt(childCountField.value);
+            childCountField.value = childCount + 1;
+        });
+
+        // Decrement child count
+        document.getElementById('child-decrement').addEventListener('click', function () {
+            var childCountField = document.getElementById('childCount');
+            var childCount = parseInt(childCountField.value);
+            if (childCount > 0) {
+                childCountField.value = childCount - 1;
+            }
+        });
+    </script>
+
+</body>
+
+</html>
